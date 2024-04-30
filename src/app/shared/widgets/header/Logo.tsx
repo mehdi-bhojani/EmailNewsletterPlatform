@@ -7,7 +7,7 @@ function Logo() {
     <div className="flex gap-2 items-center">
       <Image className="w-12 h-12" src={logo} alt="logo" />
       <h1 className="text-blue-500 text-xl font-bold uppercase ">
-        PegionPulse
+        Pigeon Pulse
       </h1>
     </div>
   );
