@@ -1,5 +1,6 @@
 "use client";
 
+import { getEmails } from "@/action/get.email";
 import { ICONS } from "@/app/shared/utils/icons";
 import { useClerk } from "@clerk/nextjs";
 import { Button } from "@nextui-org/react";
@@ -24,6 +25,23 @@ const Write = () => {
     }
   };
 
+  useEffect(() => {
+    findEmails();
+  }, [user]);
+
+  const findEmails = async () => {
+    getEmails({ newsLetterOwnerId: user?.id! })
+    .then((res) => {
+      setEmails(res);
+    })
+    .catch((err) => {
+      console.error("Error getting emails: ", err);
+    });
+  }
+  
+  const deleteHanlder = (id: string) => {
+    
+  }
 
   return (
     <div className="w-full flex p-5 flex-wrap gap-6 relative">
@@ -51,6 +69,12 @@ const Write = () => {
                 className="text-xl"
               >
                 {i.title}
+                <span
+                className="absolute block z-20 right-2 top-2 text-2xl cursor-pointer"
+                onClick={() => deleteHanlder(i?._id)}
+              >
+                {ICONS.delete}
+              </span>
               </Link>
             </div>
           );

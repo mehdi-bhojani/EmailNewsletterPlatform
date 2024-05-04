@@ -5,7 +5,9 @@ import { DefaultJsonData } from "@/app/assets/mail/default";
 import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
+import { saveEmail } from "@/action/save.email";
 import toast from "react-hot-toast";
+import { GetEmailDetails } from "@/action/get.email-details";
 
 const Emaileditor = ({ subjectTitle }: { subjectTitle: string }) => {
   const [loading, setLoading] = useState(false);
@@ -13,6 +15,11 @@ const Emaileditor = ({ subjectTitle }: { subjectTitle: string }) => {
   const { user } = useClerk();
   const emailEditorRef = useRef<EditorRef>(null);
   const history = useRouter();
+
+  useEffect(() => {
+    setLoading(true);
+    GetEmailDeatils();
+  }, [user]);
 
   const exportHtml = () => {
     const unlayer = emailEditorRef.current?.editor;
@@ -30,10 +37,40 @@ const Emaileditor = ({ subjectTitle }: { subjectTitle: string }) => {
   };
 
   const saveDraft = async () => {
-    
+    const unlayer = emailEditorRef.current?.editor;
+
+    unlayer?.exportHtml(async (data)=>{
+      const {design} = data;
+      await saveEmail({
+        title: subjectTitle,
+        content: JSON.stringify(design),
+        newsLetterOwnerId: user?.id!,
+      })
+      .then((res:any)=>{
+        toast.success(res.message);
+        history.push("/dashboard/write");
+      })
+      .catch((err:any)=>{
+        toast.error("Error saving email");
+      })
+    })
   };
 
-  
+  const GetEmailDeatils = async()=>{
+    await GetEmailDetails({
+      title: subjectTitle,
+      newsLetterOwnerId: user?.id!
+    })
+    .then((res:any)=>{
+      if(res){
+        setJsonData(JSON.parse(res?.content));
+        setLoading(false);
+      }
+    })
+    .catch((err:any)=>{
+      console.error("Error getting email details: ", err);
+    })
+  }
 
   return (
     <>
