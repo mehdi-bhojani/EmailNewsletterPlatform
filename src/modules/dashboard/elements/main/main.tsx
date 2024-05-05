@@ -66,7 +66,7 @@ export default function Main() {
                       copied ? "bg-blue-200" : "bg-transparent"
                     }`}
                   >
-                    copied
+                    {process.env.NEXT_PUBLIC_BASE_URL+'/subscribe?username='+user?.username}
                   </small>
                   <div className="absolute h-[38px] w-[90px] rounded-r-lg bg-[#DFE7FF] right-0 flex items-center justify-center">
                     <span className="text-lg">{ICONS.copy}</span>
