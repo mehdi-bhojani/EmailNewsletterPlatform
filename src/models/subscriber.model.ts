@@ -7,6 +7,12 @@ const subscriberSchema = new Schema({
     newsLetterOwnerId : {
         type : String,
     },
+    source : {
+        type : String
+    },
+    status : {
+        type: String
+    },
 },{timestamps : true})
 
 const Subscriber = mongoose.models.Subscribes || mongoose.model("Subscribes",subscriberSchema);

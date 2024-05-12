@@ -55,7 +55,7 @@ function DashboardItems({ bottomContent }: { bottomContent?: boolean }) {
                 key={index}
                 href={
                   item.url === "/"
-                    ? `/subscribe?username${user?.username}`
+                    ? `/subscribe?username=${user?.username}`
                     : item.url
                 }
                 className="p-3 flex items-center gap-3"

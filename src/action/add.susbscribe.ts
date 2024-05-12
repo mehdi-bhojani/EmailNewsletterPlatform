@@ -15,24 +15,21 @@ export const subscribe = async ({
     try {
         // fetch all users
         const users = await clerkClient.users.getUserList();
-        console.log(users);
+        
         //find owner name
         const owner = await users.find((elem) => elem.username === username);
-        console.log(owner);
-
+        
         if (!owner) {
             return { error: "Username is not valid" };
         }
 
-        console.log(email + owner?.id);
         await connectToAstraDb();
         //check if subscribe exists
         const isExistSubscribe = await Subscriber.findOne({
             email,
             newsLetterOwnerId: owner?.id,
         });
-        console.log(isExistSubscribe);
-
+        
         if (isExistSubscribe != null) {
             return { error: "Already subscribed" };
         }
@@ -42,16 +39,17 @@ export const subscribe = async ({
         if (validateResponse.status === "invalid") {
             return { error: "Invalid email" };
         }
-        console.log(validateResponse);
+        
 
         const susbcriber = await Subscriber.create({
             email,
             newsLetterOwnerId: owner?.id,
+            source: "By MB",
+            status: "Subscribed",
         });
-        // console.log(subscriber);
+        
         return susbcriber;
-    } catch (error) {
-        console.log(error);
+    } catch (error) {        
         return { error: "Error subscribing" + error };
     }
 };
